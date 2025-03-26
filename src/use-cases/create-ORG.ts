@@ -1,24 +1,28 @@
-import { ORGRepository } from "@/repositories/ORG-repository";
+import { OrgsRepository } from "@/repositories/orgs-repository";
+import { hash } from "bcryptjs";
 
-interface CreateORGUseCaseRequest {
+interface CreateOrgUseCaseRequest {
   name: string;
-  description: string;
+  description?: string;
   phone: string;
   city: string;
+  password: string;
 }
 
-export class CreateORGUseCase {
-  constructor(private orgRepository: ORGRepository) {}
+export class CreateOrgUseCase {
+  constructor(private orgRepository: OrgsRepository) {}
 
-  async execute(data: CreateORGUseCaseRequest) {
-    const ORG = await this.orgRepository.create(data);
+  async execute({ password, ...data }: CreateOrgUseCaseRequest) {
+    const passwordHash = await hash(password, 6);
 
-    if (!ORG) {
+    const org = await this.orgRepository.create({ ...data, passwordHash });
+
+    if (!org) {
       throw new Error();
     }
 
     return {
-      ORG,
+      org,
     };
   }
 }

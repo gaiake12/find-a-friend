@@ -10,7 +10,7 @@ export class PrismaPetsRepository implements PetsRepository {
         id: true,
         color: true,
         race: true,
-        ORGId: true,
+        orgId: true,
       },
     });
 
@@ -28,7 +28,7 @@ export class PrismaPetsRepository implements PetsRepository {
         id: true,
         color: true,
         race: true,
-        ORGId: true,
+        orgId: true,
       },
     });
 

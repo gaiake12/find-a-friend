@@ -4,7 +4,7 @@ import { Pet } from "@prisma/client";
 interface CreatePetUseCaseResquest {
   color: string;
   race: string;
-  ORGId: string;
+  orgId: string;
 }
 
 interface CreatePetUseCaseResponse {
