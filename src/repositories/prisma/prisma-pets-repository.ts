@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Pet, Prisma } from "@prisma/client";
 import { PetsRepository } from "../pets-repository";
 import { prisma } from "@/lib/prisma";
 
@@ -33,5 +33,23 @@ export class PrismaPetsRepository implements PetsRepository {
     });
 
     return pet;
+  }
+
+  async findAPetByCity(city: string) {
+    const pets = await prisma.pet.findMany({
+      where: {
+        org: {
+          city,
+        },
+      },
+      select: {
+        id: true,
+        color: true,
+        race: true,
+        orgId: true,
+      },
+    });
+
+    return pets;
   }
 }
