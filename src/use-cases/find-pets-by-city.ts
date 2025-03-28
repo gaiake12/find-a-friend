@@ -4,7 +4,7 @@ interface FindAPetByCityUseCaseRequest {
   city: string;
 }
 
-export class FindAPetByCityUseCase {
+export class FindPetsByCityUseCase {
   constructor(private petsRepository: PetsRepository) {}
 
   async execute({ city }: FindAPetByCityUseCaseRequest) {
