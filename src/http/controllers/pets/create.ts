@@ -15,10 +15,10 @@ export const create = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
     const createPetUseCase = makeCreatePetUseCase();
 
-    await createPetUseCase.execute(pet);
-  } catch (err) {
-    throw new Error();
-  }
+    const createdPet = await createPetUseCase.execute(pet);
 
-  return reply.status(201).send();
+    reply.status(201).send(createdPet);
+  } catch (err) {
+    reply.status(400).send();
+  }
 };

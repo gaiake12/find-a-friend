@@ -16,10 +16,10 @@ export const create = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
     const createOrgUseCase = makeCreateOrgUseCase();
 
-    createOrgUseCase.execute(createOrgData);
-  } catch (err) {
-    throw new Error();
-  }
+    const org = await createOrgUseCase.execute(createOrgData);
 
-  return reply.status(201).send();
+    return reply.status(201).send(org);
+  } catch (err) {
+    return reply.status(400).send();
+  }
 };

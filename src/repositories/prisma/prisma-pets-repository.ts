@@ -3,9 +3,40 @@ import { PetsRepository } from "../pets-repository";
 import { prisma } from "@/lib/prisma";
 
 export class PrismaPetsRepository implements PetsRepository {
-  async createPet(data: Prisma.PetUncheckedCreateInput) {
+  async searchPets(query: string, page: 1) {
+    const pets = await prisma.pet.findMany({
+      where: {
+        search: {
+          contains: query,
+        },
+      },
+      select: {
+        id: true,
+        color: true,
+        race: true,
+        orgId: true,
+      },
+      take: 20,
+      skip: (page - 1) * 20,
+    });
+
+    return pets;
+  }
+
+  async createPet({
+    color,
+    race,
+    ...data
+  }: Omit<Prisma.PetUncheckedCreateInput, "search">) {
+    const search = `${color} ${race}`;
+
     const pet = await prisma.pet.create({
-      data,
+      data: {
+        ...data,
+        color,
+        race,
+        search,
+      },
       select: {
         id: true,
         color: true,
