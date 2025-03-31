@@ -4,6 +4,7 @@ import { hash } from "bcryptjs";
 interface CreateOrgUseCaseRequest {
   name: string;
   description?: string;
+  email: string;
   phone: string;
   city: string;
   password: string;
@@ -22,7 +23,8 @@ export class CreateOrgUseCase {
     }
 
     return {
-      org,
+      ...org,
+      passwordHash: null,
     };
   }
 }

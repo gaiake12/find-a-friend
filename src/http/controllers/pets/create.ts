@@ -7,7 +7,6 @@ export const create = async (request: FastifyRequest, reply: FastifyReply) => {
   const createSchema = z.object({
     color: z.string().min(1),
     race: z.string().min(1),
-    orgId: z.string().uuid(),
   });
 
   const pet = createSchema.parse(request.body);
@@ -15,7 +14,10 @@ export const create = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
     const createPetUseCase = makeCreatePetUseCase();
 
-    const createdPet = await createPetUseCase.execute(pet);
+    const createdPet = await createPetUseCase.execute({
+      ...pet,
+      orgId: request.user.sub,
+    });
 
     reply.status(201).send(createdPet);
   } catch (err) {
