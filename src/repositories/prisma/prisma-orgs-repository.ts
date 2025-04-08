@@ -12,11 +12,35 @@ export class PrismaOrgRepository implements OrgsRepository {
         description: true,
         city: true,
         phone: true,
+        passwordHash: true,
         email: true,
       },
     });
 
     if (!org) return null;
+
+    return org;
+  }
+
+  async findById(id: string) {
+    const org = prisma.org.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        city: true,
+        phone: true,
+        email: true,
+        passwordHash: true,
+      },
+    });
+
+    if (!org) {
+      return null;
+    }
 
     return org;
   }

@@ -1,0 +1,50 @@
+import { org, Prisma } from "@prisma/client";
+import { OrgsRepository } from "../orgs-repository";
+import { randomUUID } from "crypto";
+
+export class InMemoryOrgsRepository implements OrgsRepository {
+  public items: org[] = [];
+
+  async create({
+    city,
+    email,
+    name,
+    passwordHash,
+    phone,
+    description,
+  }: Prisma.orgUncheckedCreateInput) {
+    const org = {
+      id: randomUUID(),
+      name,
+      email,
+      city,
+      passwordHash,
+      phone,
+      description: description ?? null,
+    };
+
+    this.items.push(org);
+
+    return org;
+  }
+
+  async findById(id: string) {
+    const org = this.items.find((item) => item.id === id);
+
+    if (!org) {
+      return null;
+    }
+
+    return org;
+  }
+
+  async findByEmail(email: string) {
+    const org = this.items.find((item) => item.email === email);
+
+    if (!org) {
+      return null;
+    }
+
+    return org;
+  }
+}

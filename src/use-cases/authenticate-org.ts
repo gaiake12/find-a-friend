@@ -1,5 +1,6 @@
 import { OrgsRepository } from "@/repositories/orgs-repository";
 import { compare } from "bcryptjs";
+import { InvalidCredentialsError } from "./errors/invalid-credentials-error";
 
 interface AuthenticateOrgUseCaseRequest {
   email: string;
@@ -13,13 +14,13 @@ export class AuthenticateOrgUseCase {
     const org = await this.orgRepository.findByEmail(email);
 
     if (!org) {
-      throw new Error();
+      throw new InvalidCredentialsError();
     }
 
     const hasPasswordMatch = await compare(password, org.passwordHash);
 
     if (!hasPasswordMatch) {
-      throw new Error();
+      throw new InvalidCredentialsError();
     }
 
     return org;

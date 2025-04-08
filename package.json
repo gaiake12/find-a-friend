@@ -5,7 +5,8 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "dev": "tsx watch src/server.ts"
+    "dev": "tsx watch src/server.ts",
+    "test": "vitest run --dir src/use-cases"
   },
   "devDependencies": {
     "@rocketseat/eslint-config": "^2.2.2",

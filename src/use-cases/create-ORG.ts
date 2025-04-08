@@ -1,5 +1,6 @@
 import { OrgsRepository } from "@/repositories/orgs-repository";
 import { hash } from "bcryptjs";
+import { UserAlreadyExistsError } from "./errors/user-already-exists-error";
 
 interface CreateOrgUseCaseRequest {
   name: string;
@@ -16,15 +17,14 @@ export class CreateOrgUseCase {
   async execute({ password, ...data }: CreateOrgUseCaseRequest) {
     const passwordHash = await hash(password, 6);
 
-    const org = await this.orgRepository.create({ ...data, passwordHash });
+    const orgWithSameEmail = await this.orgRepository.findByEmail(data.email);
 
-    if (!org) {
-      throw new Error();
+    if (orgWithSameEmail) {
+      throw new UserAlreadyExistsError();
     }
 
-    return {
-      ...org,
-      passwordHash: null,
-    };
+    const org = await this.orgRepository.create({ ...data, passwordHash });
+
+    return org;
   }
 }
