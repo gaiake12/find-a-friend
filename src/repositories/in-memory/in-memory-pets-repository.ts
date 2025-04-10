@@ -43,14 +43,9 @@ export class InMemoryPetsRepository implements PetsRepository {
     return pets;
   }
 
-  async findAPetByCity(city: string) {
-    const inMemoryOrgsRepository = new InMemoryOrgsRepository();
-    const filteredOrgsIds = inMemoryOrgsRepository.items
-      .filter((org) => org.city === city)
-      .map((org) => org.id);
-
+  async findPetByOrgId(orgsIds: string[]) {
     const pets = this.items.filter((pet) =>
-      filteredOrgsIds.some((orgId) => orgId === pet.orgId)
+      orgsIds.some((orgId) => orgId === pet.orgId)
     );
 
     return pets;

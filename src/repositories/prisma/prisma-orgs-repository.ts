@@ -22,8 +22,23 @@ export class PrismaOrgRepository implements OrgsRepository {
     return org;
   }
 
+  async findOrgsByCity(city: string) {
+    const orgs = await prisma.org.findMany({
+      where: {
+        city,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    const orgsIds = orgs.map((org) => org.id);
+
+    return orgsIds;
+  }
+
   async findById(id: string) {
-    const org = prisma.org.findUnique({
+    const org = await prisma.org.findUnique({
       where: {
         id,
       },
@@ -46,7 +61,7 @@ export class PrismaOrgRepository implements OrgsRepository {
   }
 
   async findByEmail(email: string) {
-    const org = prisma.org.findUnique({
+    const org = await prisma.org.findUnique({
       where: {
         email,
       },

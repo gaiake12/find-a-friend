@@ -66,11 +66,11 @@ export class PrismaPetsRepository implements PetsRepository {
     return pet;
   }
 
-  async findAPetByCity(city: string) {
+  async findPetByOrgId(orgsIds: string[]) {
     const pets = await prisma.pet.findMany({
       where: {
-        org: {
-          city,
+        orgId: {
+          in: orgsIds,
         },
       },
       select: {

@@ -28,6 +28,14 @@ export class InMemoryOrgsRepository implements OrgsRepository {
     return org;
   }
 
+  async findOrgsByCity(city: string) {
+    const orgs = this.items
+      .filter((org) => org.city === city)
+      .map((org) => org.id);
+
+    return orgs;
+  }
+
   async findById(id: string) {
     const org = this.items.find((item) => item.id === id);
 

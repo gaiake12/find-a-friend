@@ -1,4 +1,5 @@
 import { PetsRepository } from "@/repositories/pets-repository";
+import { InvalidPetError } from "./errors/invalid-pet-error";
 
 interface FetchPetInfoUseCaseRequest {
   id: string;
@@ -11,7 +12,7 @@ export class FetchPetInfoUseCase {
     const pet = await this.petsRepository.findPetById(id);
 
     if (!pet) {
-      throw new Error();
+      throw new InvalidPetError();
     }
 
     return pet;

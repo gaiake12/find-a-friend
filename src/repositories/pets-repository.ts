@@ -7,6 +7,6 @@ export interface PetsRepository {
   createPet(
     data: Omit<Prisma.PetUncheckedCreateInput, "search">
   ): Promise<PetWithoutSearch | null>;
-  findAPetByCity(city: string): Promise<PetWithoutSearch[]>;
+  findPetByOrgId(orgsIds: string[]): Promise<PetWithoutSearch[]>;
   searchPets(query: string, page: number): Promise<PetWithoutSearch[]>;
 }

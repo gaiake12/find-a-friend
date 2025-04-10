@@ -1,20 +1,20 @@
 import { InMemoryOrgsRepository } from "@/repositories/in-memory/in-memory-orgs-repository";
 import { InMemoryPetsRepository } from "@/repositories/in-memory/in-memory-pets-repository";
-import { describe, expect, it, beforeEach } from "vitest";
-import { CreatePetUseCase } from "./create-pet";
+import { describe, beforeEach, it, expect } from "vitest";
+import { FetchPetInfoUseCase } from "./fetch-pet-info";
 import { hash } from "bcryptjs";
-import { InvalidOrgError } from "./errors/invalid-org-error";
+import { InvalidPetError } from "./errors/invalid-pet-error";
 
 let orgsRepository: InMemoryOrgsRepository;
 let petsRepository: InMemoryPetsRepository;
-let sut: CreatePetUseCase;
-let orgId: string;
+let sut: FetchPetInfoUseCase;
+let petId: string;
 
-describe("Create Pet use case", async () => {
+describe("Fetch pet info use case", () => {
   beforeEach(async () => {
     orgsRepository = new InMemoryOrgsRepository();
     petsRepository = new InMemoryPetsRepository();
-    sut = new CreatePetUseCase(petsRepository, orgsRepository);
+    sut = new FetchPetInfoUseCase(petsRepository);
 
     const org = await orgsRepository.create({
       name: "Care Pet",
@@ -25,26 +25,26 @@ describe("Create Pet use case", async () => {
       city: "São Paulo",
     });
 
-    orgId = org.id;
-  });
-
-  it("should be able to create a pet", async () => {
-    const { pet } = await sut.execute({
+    const pet = await petsRepository.createPet({
       race: "Pastor Alemão",
       color: "Branco",
-      orgId,
+      orgId: org.id,
+    });
+
+    petId = pet.id;
+  });
+
+  it("should be able to fetch a pet info", async () => {
+    const pet = await sut.execute({
+      id: petId,
     });
 
     expect(pet.id).toEqual(expect.any(String));
   });
 
-  it("should not be able to create a pet without a valid orgId", async () => {
-    await expect(async () =>
-      sut.execute({
-        race: "Pastor Alemão",
-        color: "Branco",
-        orgId: "123",
-      })
-    ).rejects.toBeInstanceOf(InvalidOrgError);
+  it("should not be able to fecth with an invalid pet id", async () => {
+    await expect(async () => sut.execute({ id: "123" })).rejects.toBeInstanceOf(
+      InvalidPetError
+    );
   });
 });
